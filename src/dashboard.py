@@ -358,13 +358,28 @@ def show_sql_queries(db_path='data/analytics.db'):
     
     # Custom query
     st.subheader("Custom SQL Query")
+    st.warning("⚠️ This is a demo feature. Only use SELECT queries. Do not use with untrusted data sources.")
     custom_query = st.text_area("Enter your SQL query:", 
                                 value="SELECT * FROM sales LIMIT 10;",
                                 height=150)
     
     if st.button("Execute Custom Query"):
+        # Basic validation - only allow SELECT queries
+        query_upper = custom_query.strip().upper()
+        if not query_upper.startswith('SELECT'):
+            st.error("⚠️ Only SELECT queries are allowed for security reasons.")
+            return
+        
+        # Check for dangerous keywords
+        dangerous_keywords = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'CREATE', 'EXEC', 'EXECUTE']
+        if any(keyword in query_upper for keyword in dangerous_keywords):
+            st.error("⚠️ Query contains disallowed keywords. Only SELECT queries are permitted.")
+            return
+        
         try:
             conn = sqlite3.connect(db_path)
+            # Set read-only mode for safety
+            conn.execute("PRAGMA query_only = ON;")
             result_df = pd.read_sql_query(custom_query, conn)
             conn.close()
             
