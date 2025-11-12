@@ -1,0 +1,24 @@
+# Core Data Analysis Libraries
+pandas==2.1.4
+numpy==1.26.2
+matplotlib==3.8.2
+seaborn==0.13.0
+scikit-learn==1.3.2
+
+# Interactive Visualizations
+plotly==5.18.0
+
+# Interactive Dashboard
+streamlit==1.29.0
+
+# SQL Database Support
+sqlalchemy==2.0.23
+sqlite3-python==1.0.0
+
+# Data Export
+openpyxl==3.1.2
+xlsxwriter==3.1.9
+
+# Additional Utilities
+python-dateutil==2.8.2
+pytz==2023.3
