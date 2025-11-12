@@ -359,6 +359,14 @@ def show_sql_queries(db_path='data/analytics.db'):
     # Custom query
     st.subheader("Custom SQL Query")
     st.warning("⚠️ This is a demo feature. Only use SELECT queries. Do not use with untrusted data sources.")
+    
+    # NOTE: This feature intentionally allows user-provided SQL queries for educational/demo purposes.
+    # Security measures implemented:
+    # 1. Query validation - only SELECT statements allowed
+    # 2. Dangerous keyword filtering (DROP, DELETE, INSERT, etc.)
+    # 3. Read-only database mode
+    # 4. User warnings displayed
+    # For production use, implement parameterized queries or use an ORM
     custom_query = st.text_area("Enter your SQL query:", 
                                 value="SELECT * FROM sales LIMIT 10;",
                                 height=150)
@@ -380,6 +388,9 @@ def show_sql_queries(db_path='data/analytics.db'):
             conn = sqlite3.connect(db_path)
             # Set read-only mode for safety
             conn.execute("PRAGMA query_only = ON;")
+            # Note: Still vulnerable to SQL injection in SELECT statements (e.g., UNION attacks)
+            # This is acceptable for a demo/educational tool with local data only
+            # Production applications should use parameterized queries
             result_df = pd.read_sql_query(custom_query, conn)
             conn.close()
             
